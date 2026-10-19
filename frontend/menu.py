@@ -1,4 +1,7 @@
 import sys
+from IPython.display import clear_output
+
+clear_output(wait=True)
 
 sys.path.insert(0, "/home/jovyan/basic_programming_project")
 
@@ -9,7 +12,9 @@ def menu():
     current_file = None    
     
     while n != 7:
-
+        
+        clear_output(wait=True)
+        
         print("="*50)
         print(f'{"TEXT ANALYSER":^50}')
         print("="*50)
@@ -33,7 +38,7 @@ def menu():
                 print("No books found")
             else:
                 for i, book in enumerate(books, start=1):
-                    print(f'{i}, {book}')
+                    print(f'{i}. {book}')
 
                 try:
                     pick = int(input("Enter the number of the file to load (0 to cancel): "))
