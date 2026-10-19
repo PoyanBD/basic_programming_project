@@ -21,10 +21,11 @@ def process_book(path):
 
     print(line_count, word_count, character_count_space,
           character_count_nospace)
-    print("avg-w-l", word_analysis.words_per_line(word_count, line_count))
+    print("avg-w-l", basic_statistics.words_per_line(word_count, line_count))
     print(
         "avg-c-w",
-        word_analysis.characters_per_word(character_count_nospace, word_count))
+        basic_statistics.characters_per_word(character_count_nospace,
+                                             word_count))
 
 
 process_book("../basic_programming_project/library/test.txt")
