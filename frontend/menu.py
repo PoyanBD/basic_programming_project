@@ -6,10 +6,10 @@ from backend.file_loading import check_library, search_file, process_book
 
 def menu(): 
     n = 0
-    current_file = None
+    current_file = None    
     
     while n != 7:
-        
+
         print("="*50)
         print(f'{"TEXT ANALYSER":^50}')
         print("="*50)
@@ -21,13 +21,32 @@ def menu():
             print(f'Current file: {current_file}')
         else: 
             print("No file loaded")
-    
+        
         n = int(input("Enter a number (1-7) to select a menu option, or 7 to exit: "))
     
     
         if n == 1:
             print("--- File Selection ---")
-            print(check_library())
+            books = check_library()
+
+            if not books:
+                print("No books found")
+            else:
+                for i, book in enumerate(books, start=1):
+                    print(f'{i}, {book}')
+
+                try:
+                    pick = int(input("Enter the number of the file to load (0 to cancel): "))
+                except ValueError:
+                    print("Pleae enter a number ")
+                else:
+                    if pick == 0:
+                        print("cancelled")
+                    elif 1 <= pick <= len(books):
+                        current_file = books[pick - 1]
+                    else:
+                        print("That number isn't in the list")
+                
         elif n == 2:
             print("You selected option 2: Display basic statistics.")
         elif n == 3:
