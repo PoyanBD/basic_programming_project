@@ -20,12 +20,6 @@ def search_file():
         print("File Does not exist")
 
 
-def process_book(path):
-    with open(path, "r") as book:
-        for line in book:
-            print(line)
-
-
 #print(check_library())
 #process_book("../basic_programming_project/library/test.txt")
 #print(glob.glob("../basic_programming_project/library/*.txt"))
