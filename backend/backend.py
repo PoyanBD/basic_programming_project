@@ -11,7 +11,9 @@ def process_book(path):
     word_count = 0
     sentence_count = 0
     longest_sentence = ""
+    shortest_sentence = ""
     curent_sentence = ""
+    sentences = []
 
     with open(path, "r", encoding="utf-8") as book:
         for line in book:
@@ -23,8 +25,12 @@ def process_book(path):
             character_count_space += int(characters_in_line)
             character_count_nospace += int(characters_without_in_line)
             sentence_count += sentence_analysis.sentence_counter(line)
-            longest_sentence, curent_sentence = sentence_analysis.long_sentence(
-                line, curent_sentence, longest_sentence)
+            sentences, curent_sentence = sentence_analysis.sentences_in_line(
+                line, curent_sentence)
+            longest_sentence = sentence_analysis.long_sentence(
+                longest_sentence, sentences)
+            shortest_sentence = sentence_analysis.short_sentence(
+                shortest_sentence, sentences)
 
     print(line_count, word_count, character_count_space,
           character_count_nospace)
@@ -37,6 +43,7 @@ def process_book(path):
     print("avg-w-s",
           sentence_analysis.words_per_sentence(word_count, sentence_count))
     print("Longest sentence:", longest_sentence)
+    print("Shortest sentence:", shortest_sentence)
 
 
-process_book("../basic_programming_project/library/GostaberlingsSaga.txt")
+process_book("../basic_programming_project/library/Test.txt")
