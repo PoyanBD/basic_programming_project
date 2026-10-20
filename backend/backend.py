@@ -14,6 +14,7 @@ def process_book(path):
     shortest_sentence = ""
     curent_sentence = ""
     sentences = []
+    counts = {}
 
     with open(path, "r", encoding="utf-8") as book:
         for line in book:
@@ -31,6 +32,21 @@ def process_book(path):
                 longest_sentence, sentences)
             shortest_sentence = sentence_analysis.short_sentence(
                 shortest_sentence, sentences)
+
+            # for top_ten()
+            for word in line.split():
+                word_count += 1
+                word = word.lower().strip(".,!?;:\"'()[]{}")
+                if word in counts:
+                    counts[word] += 1
+                else:
+                    counts[word] = 1
+
+    top_ten = sorted(counts.items(), key=lambda item: item[1],
+                     reverse=True)[:10]
+
+    for word, count in word_analysis.top10(counts):
+        print(f"{word:<10}{count}")
 
     print(line_count, word_count, character_count_space,
           character_count_nospace)
