@@ -1,6 +1,7 @@
 import basic_statistics
 import file_loading
 import word_analysis
+import sentence_analysis
 
 
 def process_book(path):
@@ -8,8 +9,11 @@ def process_book(path):
     character_count_nospace = 0
     line_count = 0
     word_count = 0
+    sentence_count = 0
+    longest_sentence = ""
+    curent_sentence = ""
 
-    with open(path, "r") as book:
+    with open(path, "r", encoding="utf-8") as book:
         for line in book:
             line_count += 1
             if basic_statistics.line_to_words(line) != [""]:
@@ -18,6 +22,9 @@ def process_book(path):
                 line)
             character_count_space += int(characters_in_line)
             character_count_nospace += int(characters_without_in_line)
+            sentence_count += sentence_analysis.sentence_counter(line)
+            longest_sentence, curent_sentence = sentence_analysis.long_sentence(
+                line, curent_sentence, longest_sentence)
 
     print(line_count, word_count, character_count_space,
           character_count_nospace)
@@ -26,6 +33,10 @@ def process_book(path):
         "avg-c-w",
         basic_statistics.characters_per_word(character_count_nospace,
                                              word_count))
+    print("sentence count:", sentence_count)
+    print("avg-w-s",
+          sentence_analysis.words_per_sentence(word_count, sentence_count))
+    print("Longest sentence:", longest_sentence)
 
 
-process_book("../basic_programming_project/library/test.txt")
+process_book("../basic_programming_project/library/GostaberlingsSaga.txt")
