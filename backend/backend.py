@@ -22,6 +22,8 @@ def process_book(path):
     counts = {}
     words_in_line = []
 
+    data = {}
+
     with open(path, "r", encoding="utf-8") as book:
         for line in book:
             line_count += 1
@@ -60,22 +62,24 @@ def process_book(path):
 
     # for word, count in word_analysis.top10(counts):
     #     print(f"{word:<10}{count}")
-
-    print("Line", line_count, "Words", word_count, "chr",
-          character_count_space, character_count_nospace)
-    print("avg-w-l", basic_statistics.words_per_line(word_count, line_count))
-    print(
-        "avg-c-w",
-        basic_statistics.characters_per_word(character_count_nospace,
-                                             word_count))
-    print("sentence count:", sentence_count)
-    print("avg-w-s",
-          sentence_analysis.words_per_sentence(word_count, sentence_count))
-    print("Longest sentence:", longest_sentence)
-    print("Shortest sentence:", shortest_sentence)
-    print(dict_characters)
-    print(dict_punctuations)
-    print("lower-c", lower_case_count, "upper-c", upper_case_count)
+    data["number_of_lines"] = line_count
+    data["number_of_words"] = word_count
+    data["number_of_characters_with_spaces"] = character_count_space
+    data["number_of_characters"] = character_count_nospace
+    data["avg_word_per_line"] = basic_statistics.words_per_line(
+        word_count, line_count)
+    data["avg_character_per_word"] = basic_statistics.characters_per_word(
+        character_count_nospace, word_count)
+    data["number_of_sentences"] = sentence_count
+    data["avg_word_per_sentences"] = sentence_analysis.words_per_sentence(
+        word_count, sentence_count)
+    data["longest_sentence"] = longest_sentence
+    data["shortest_sentence"] = shortest_sentence
+    data["character_frequency"] = dict_characters
+    data["punctuation_frequency"] = dict_punctuations
+    data["number_of_lowercase"] = lower_case_count
+    data["number_of_uppercase"] = upper_case_count
+    print(data)
 
 
 process_book("../basic_programming_project/library/Test.txt")
