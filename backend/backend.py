@@ -2,6 +2,7 @@ import basic_statistics
 import file_loading
 import word_analysis
 import sentence_analysis
+import character_analysis
 
 
 def process_book(path):
@@ -10,28 +11,40 @@ def process_book(path):
     line_count = 0
     word_count = 0
     sentence_count = 0
+    upper_case_count = 0
+    lower_case_count = 0
     longest_sentence = ""
     shortest_sentence = ""
-    curent_sentence = ""
+    current_sentence = ""
     sentences = []
+    dict_characters = {}
+    dict_punctuations = {}
     counts = {}
+    words_in_line = []
 
     with open(path, "r", encoding="utf-8") as book:
         for line in book:
             line_count += 1
-            if basic_statistics.line_to_words(line) != [""]:
-                word_count += len(basic_statistics.line_to_words(line))
+            words_in_line = basic_statistics.line_to_words(line)
+            if words_in_line != [""]:
+                word_count += len(words_in_line)
             characters_in_line, characters_without_in_line = basic_statistics.count_characters(
                 line)
             character_count_space += int(characters_in_line)
             character_count_nospace += int(characters_without_in_line)
             sentence_count += sentence_analysis.sentence_counter(line)
-            sentences, curent_sentence = sentence_analysis.sentences_in_line(
-                line, curent_sentence)
+            sentences, current_sentence = sentence_analysis.sentences_in_line(
+                line, current_sentence)
             longest_sentence = sentence_analysis.long_sentence(
                 longest_sentence, sentences)
             shortest_sentence = sentence_analysis.short_sentence(
                 shortest_sentence, sentences)
+            dict_characters = character_analysis.letter_frequency(
+                words_in_line, dict_characters)
+            dict_punctuations = character_analysis.punctuation_statistics(
+                words_in_line, dict_punctuations)
+            lower_case_count, upper_case_count = character_analysis.case_distribution(
+                words_in_line, lower_case_count, upper_case_count)
 
             # for top_ten()
             for word in line.split():
@@ -45,11 +58,11 @@ def process_book(path):
     top_ten = sorted(counts.items(), key=lambda item: item[1],
                      reverse=True)[:10]
 
-    for word, count in word_analysis.top10(counts):
-        print(f"{word:<10}{count}")
+    # for word, count in word_analysis.top10(counts):
+    #     print(f"{word:<10}{count}")
 
-    print(line_count, word_count, character_count_space,
-          character_count_nospace)
+    print("Line", line_count, "Words", word_count, "chr",
+          character_count_space, character_count_nospace)
     print("avg-w-l", basic_statistics.words_per_line(word_count, line_count))
     print(
         "avg-c-w",
@@ -60,6 +73,9 @@ def process_book(path):
           sentence_analysis.words_per_sentence(word_count, sentence_count))
     print("Longest sentence:", longest_sentence)
     print("Shortest sentence:", shortest_sentence)
+    print(dict_characters)
+    print(dict_punctuations)
+    print("lower-c", lower_case_count, "upper-c", upper_case_count)
 
 
 process_book("../basic_programming_project/library/Test.txt")
