@@ -24,7 +24,7 @@ def sentences_in_line(line, sentence):
 
 def long_sentence(longest_sentence, sentences):
     for sentence in sentences:
-        this_sentence = sentence.replace("\\n", "").strip()
+        this_sentence = sentence.replace("\n", " ").strip()
         if len(longest_sentence) < len(this_sentence):
             longest_sentence = this_sentence
 
@@ -33,10 +33,23 @@ def long_sentence(longest_sentence, sentences):
 
 def short_sentence(shortest_sentence, sentences):
     for sentence in sentences:
-        this_sentence = sentence.replace("\\n", "").strip()
+        this_sentence = sentence.replace("\n", " ").strip()
         if shortest_sentence == "":
             shortest_sentence = this_sentence
         if len(shortest_sentence) > len(this_sentence):
             shortest_sentence = this_sentence
 
     return (shortest_sentence)
+
+
+def sentence_len_distribution(sentences, dict_sentence_len):
+    this_dict = dict_sentence_len
+
+    for sentence in sentences:
+        sentence_len = str(len(sentence.split()))
+        if sentence_len in this_dict:
+            this_dict[sentence_len] += 1
+        else:
+            this_dict[sentence_len] = 1
+
+    return this_dict

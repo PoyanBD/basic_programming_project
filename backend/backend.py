@@ -4,6 +4,8 @@ import word_analysis
 import sentence_analysis
 import character_analysis
 
+import json
+
 
 def process_book(path):
     character_count_space = 0
@@ -17,11 +19,11 @@ def process_book(path):
     shortest_sentence = ""
     current_sentence = ""
     sentences = []
+    words_in_line = []
     dict_characters = {}
     dict_punctuations = {}
+    dict_sentence_len = {}
     counts = {}
-    words_in_line = []
-
     data = {}
 
     with open(path, "r", encoding="utf-8") as book:
@@ -41,6 +43,8 @@ def process_book(path):
                 longest_sentence, sentences)
             shortest_sentence = sentence_analysis.short_sentence(
                 shortest_sentence, sentences)
+            dict_sentence_len = sentence_analysis.sentence_len_distribution(
+                sentences, dict_sentence_len)
             dict_characters = character_analysis.letter_frequency(
                 words_in_line, dict_characters)
             dict_punctuations = character_analysis.punctuation_statistics(
@@ -75,11 +79,18 @@ def process_book(path):
         word_count, sentence_count)
     data["longest_sentence"] = longest_sentence
     data["shortest_sentence"] = shortest_sentence
-    data["character_frequency"] = dict_characters
-    data["punctuation_frequency"] = dict_punctuations
+    data["sentence_len_distribution"] = dict(sorted(dict_sentence_len.items()))
+    data["character_frequency"] = dict(sorted(dict_characters.items()))
+    data["punctuation_frequency"] = dict(sorted(dict_punctuations.items()))
     data["number_of_lowercase"] = lower_case_count
     data["number_of_uppercase"] = upper_case_count
+
+    with open("../basic_programming_project/backend/database/data.json",
+              mode="w",
+              encoding="utf-8") as export_data:
+        json.dump(data, export_data)
+
     print(data)
 
 
-process_book("../basic_programming_project/library/Test.txt")
+process_book("../basic_programming_project/library/test.txt")

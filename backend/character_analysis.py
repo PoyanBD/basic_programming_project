@@ -10,6 +10,7 @@ def letter_frequency(words, dict_characters):
             this_dict[character] += 1
         else:
             this_dict[character] = 1
+
     return this_dict
 
 
