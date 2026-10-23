@@ -90,7 +90,5 @@ def process_book(path):
               encoding="utf-8") as export_data:
         json.dump(data, export_data)
 
-    print(data)
 
-
-process_book("../basic_programming_project/library/test.txt")
+# process_book("../basic_programming_project/library/test.txt")

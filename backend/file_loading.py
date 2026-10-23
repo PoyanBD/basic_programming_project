@@ -18,8 +18,3 @@ def search_file():
             f"../basic_programming_project/library/{file_name}.txt")
     else:
         print("File Does not exist")
-
-
-#print(check_library())
-#process_book("../basic_programming_project/library/test.txt")
-#print(glob.glob("../basic_programming_project/library/*.txt"))
