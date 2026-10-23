@@ -4,8 +4,5 @@ def top10(counts):
 def unique_words(words):
     return len(set(words))
 
-def words_appearing_only_once(word, words):
-    word_counts = {}
-    for w in words:
-        word_counts[w] = word_counts.get(w, 0) + 1
-    return word_counts.get(word, 0) == 1
+def words_appearing_only_once(counts):
+    return sorted(w for w, c in counts.items() if c == 1)

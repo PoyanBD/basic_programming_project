@@ -84,6 +84,8 @@ def process_book(filename):
         "punctuation_frequency": dict(sorted(dict_punctuations.items())),
         "number_of_lowercase": lower_case_count,
         "number_of_uppercase": upper_case_count,
+        "unique_words": word_analysis.unique_words(counts),
+        "words_appearing_once": len(word_analysis.words_appearing_only_once(counts))
     }
 
     results = {"filename": filename, "data": data, "counts": counts}
@@ -106,7 +108,12 @@ def get_basic_stats():
 
 
 def get_word_frequency():
-    return word_analysis.top10(results["counts"])
+    d = results["data"]
+    return {
+        "top 10": word_analysis.top10(results["counts"]),
+        "unique words": d["unique_words"],
+        "words appearing once": d["words_appearing_once"],
+    }
 
 
 def get_sentence_stats():
