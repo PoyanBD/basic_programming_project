@@ -1,10 +1,10 @@
-import os
-import json
 import basic_statistics
-#import file_loading
+import file_loading
 import word_analysis
 import sentence_analysis
 import character_analysis
+
+import json
 
 
 def process_book(path):
@@ -13,7 +13,6 @@ def process_book(path):
     line_count = 0
     word_count = 0
     sentence_count = 0
-    paragraph_count = 1
     upper_case_count = 0
     lower_case_count = 0
     longest_sentence = ""
@@ -24,17 +23,16 @@ def process_book(path):
     dict_characters = {}
     dict_punctuations = {}
     dict_sentence_len = {}
-    dict_words = {}
+    counts = {}
     data = {}
 
     with open(path, "r", encoding="utf-8") as book:
         for line in book:
             line_count += 1
+
             words_in_line = basic_statistics.line_to_words(line)
             if words_in_line != [""]:
                 word_count += len(words_in_line)
-            if words_in_line == [""]:
-                paragraph_count += 1
             characters_in_line, characters_without_in_line = basic_statistics.count_characters(
                 line)
             character_count_space += int(characters_in_line)
@@ -48,19 +46,32 @@ def process_book(path):
                 shortest_sentence, sentences)
             dict_sentence_len = sentence_analysis.sentence_len_distribution(
                 sentences, dict_sentence_len)
+
             dict_characters = character_analysis.letter_frequency(
                 words_in_line, dict_characters)
             dict_punctuations = character_analysis.punctuation_statistics(
                 words_in_line, dict_punctuations)
             lower_case_count, upper_case_count = character_analysis.case_distribution(
                 words_in_line, lower_case_count, upper_case_count)
-            # dict_words = word_analysis.top10(words_in_line, dict_words)
 
+            # for top_ten()
+            for word in line.split():
+                word_count += 1
+                word = word.lower().strip(".,!?;:\"'()[]{}")
+                if word in counts:
+                    counts[word] += 1
+                else:
+                    counts[word] = 1
+
+    top_ten = sorted(counts.items(), key=lambda item: item[1],
+                     reverse=True)[:10]
+
+    # for word, count in word_analysis.top10(counts):
+    #     print(f"{word:<10}{count}")
     data["number_of_lines"] = line_count
     data["number_of_words"] = word_count
     data["number_of_characters_with_spaces"] = character_count_space
     data["number_of_characters"] = character_count_nospace
-    data["number_of_paragraph"] = paragraph_count
     data["avg_word_per_line"] = basic_statistics.words_per_line(
         word_count, line_count)
     data["avg_character_per_word"] = basic_statistics.characters_per_word(
@@ -80,6 +91,3 @@ def process_book(path):
               mode="w",
               encoding="utf-8") as export_data:
         json.dump(data, export_data)
-
-
-# process_book("../basic_programming_project/library/test.txt")
