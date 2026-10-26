@@ -1,8 +1,12 @@
 import sys
+import os
+import json
 
+#sys.path.append(os.path.join(os.getcwd(), "basic_programming_project"))
 sys.path.append('../basic_programming_project/backend')
 
-import backend
+import back_end
+import file_loading
 
 
 def menu():
@@ -16,14 +20,19 @@ def menu():
         print("=" * 50)
 
         print(
-            " 1. Load text file \n 2. Display basic statistics \n 3. Word frequency analysis \n 4. Sentence analysis \n 5. Character analysis \n 6. Export results \n 7. Exit"
+            " 1. Book selection \n 2. Display basic statistics \n 3. Word frequency analysis \n 4. Sentence analysis \n 5. Character analysis \n 6. Export results \n 7. Exit"
         )
         print("=" * 50)
 
         if current_file:
             print(f'Current file: {current_file}')
+            back_end.process_book(current_file)
         else:
             print("No file loaded")
+
+        with open("../basic_programming_project/backend/database/data.json",
+                  "r") as file:
+            data = json.load(file)
 
         n = int(
             input(
@@ -32,7 +41,7 @@ def menu():
 
         if n == 1:
             print("--- File Selection ---")
-            books = backend.file_loading.check_library()
+            books = file_loading.check_library()
 
             if not books:
                 print("No books found")
@@ -41,22 +50,37 @@ def menu():
                     print(f'{i}. {book}')
 
                 try:
-                    pick = int(
-                        input(
-                            "Enter the number of the file to load (0 to cancel): "
-                        ))
+                    pick = input(
+                        "Enter the number of the file to load or write the name of the book (0 to cancel): "
+                    )
+                    pick = int(pick)
                 except ValueError:
-                    print("Pleae enter a number ")
+                    current_file = file_loading.search_file(pick)
                 else:
+
                     if pick == 0:
                         print("cancelled")
                     elif 1 <= pick <= len(books):
-                        current_file = books[pick - 1]
+                        current_file = file_loading.search_file(books[pick -
+                                                                      1])
+
                     else:
                         print("That number isn't in the list")
 
         elif n == 2:
-            print("You selected option 2: Display basic statistics.")
+            print(f"--- Basic Statistics for {current_file}---")
+            print("Lines:", data["number_of_lines"])
+            print("Paragraphs:", data["number_of_paragraph"])
+            print("Sentences:", data["number_of_sentences"])
+            print("Words:", data["number_of_words"])
+            print("Unique words:", "not implemented")
+            print("Characters (with spaces):",
+                  data["number_of_characters_with_spaces"])
+            print("Characters (without spaces):", data["number_of_characters"])
+            print("Average words per line:", data["avg_word_per_line"])
+            print("Average word length:", "not implemented")
+            print("Average words per sentence:",
+                  data["avg_word_per_sentences"])
         elif n == 3:
             print("You selected option 3: Word frequency analysis.")
         elif n == 4:

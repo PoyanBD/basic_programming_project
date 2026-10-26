@@ -2,3 +2,5 @@ library/*
 !library/.gitkeep
 !library/text.txt/.gitkeep
 __pycache__
+pyproject.toml
+.idea

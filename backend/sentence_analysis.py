@@ -10,6 +10,7 @@ def words_per_sentence(words, sentences):
     return round(int(words) / int(sentences), 2)
 
 
+#"https://www.merriam-webster.com/dictionary/sentence": a word, clause, or phrase or a group of clauses or phrases forming a syntactic unit which expresses an assertion, a question, a command, a wish, an exclamation, or the performance of an action, that in writing usually begins with a capital letter and concludes with appropriate end punctuation, and that in speaking is distinguished by characteristic patterns of stress, pitch, and pauses
 def sentences_in_line(line, sentence):
     full_sentences = []
     for character in line:
