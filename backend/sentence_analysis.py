@@ -11,15 +11,38 @@ def words_per_sentence(words, sentences):
 
 
 #"https://www.merriam-webster.com/dictionary/sentence": a word, clause, or phrase or a group of clauses or phrases forming a syntactic unit which expresses an assertion, a question, a command, a wish, an exclamation, or the performance of an action, that in writing usually begins with a capital letter and concludes with appropriate end punctuation, and that in speaking is distinguished by characteristic patterns of stress, pitch, and pauses
+# honorifics: I, Mr, Mrs, Miss, Ms, Mx, Sir, Dame, Dr, Cllr, Lady, or Lord.
+
+
 def sentences_in_line(line, sentence):
+    sentence_exceptions = [
+        "Mr.", "Mrs.", "Miss.", "Ms.", "Mx.", "Sir.", "Dame.", "Dr.", "Cllr.",
+        "Lady.", "Lord.", "I."
+    ]
     full_sentences = []
+    last_five_characters = ""
+    line_index = 0
     for character in line:
+        last_five_characters += character
+        if len(last_five_characters) >= 5:
+            last_five_characters = last_five_characters[1:5]
+
         if character != "!" and character != "." and character != "?":
             sentence += character
         else:
-            sentence += character
-            full_sentences.append(sentence)
-            sentence = ""
+            end_sentence = -1
+            for exception in sentence_exceptions:
+                if end_sentence == -1:
+                    end_sentence = last_five_characters.find(exception)
+            if character == "." and line[line_index + 1] == ".":
+                end_sentence = 1
+            if end_sentence == -1:
+                sentence += character
+                full_sentences.append(sentence)
+                sentence = ""
+            else:
+                sentence += character
+        line_index += 1
     return (full_sentences, sentence)
 
 
