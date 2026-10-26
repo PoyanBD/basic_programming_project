@@ -1,13 +1,10 @@
 import glob
 import os
 
-LIBRARY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..",
-                       "library")
-
+LIBRARY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "library")
 
 def get_path(file_name):
     return os.path.join(LIBRARY, file_name)
-
 
 def check_library():
     book_list = []
