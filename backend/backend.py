@@ -16,6 +16,20 @@ results = {}
 def list_books():
     return file_loading.check_library()
 
+def choose_books(choice):
+    books = list_books()
+    choice = choice.strip()
+    
+    if choice.isdigit():
+        number = int(choice)
+        if 1 <= number <= len(books):
+            return books[number - 1]
+        return None
+    
+    for book in books:
+        if choice.lower() in (book.lower(), book.lower().removesuffix(".txt")):
+            return book
+    return None
 
 def process_book(filename):
     global results
@@ -29,7 +43,7 @@ def process_book(filename):
     dict_characters = {}
     dict_punctuations = {}
     dict_sentence_len = {}
-    counts = {}
+    dict_words = {}
 
     with open(path, "r", encoding="utf-8") as book:
         for line in book:
@@ -60,10 +74,7 @@ def process_book(filename):
             lower_case_count, upper_case_count = character_analysis.case_distribution(
                 words_in_line, lower_case_count, upper_case_count)
 
-            # for top10()
-            for word in line.split():
-                word = word.lower().strip(".,!?;:\"'()[]{}")
-                counts[word] = counts.get(word, 0) + 1
+            dict_words = word_analysis.count_words(words_in_line, dict_words)
 
     data = {
         "number_of_lines": line_count,
@@ -84,63 +95,70 @@ def process_book(filename):
         "punctuation_frequency": dict(sorted(dict_punctuations.items())),
         "number_of_lowercase": lower_case_count,
         "number_of_uppercase": upper_case_count,
-        "unique_words": word_analysis.unique_words(counts),
-        "words_appearing_once": len(word_analysis.words_appearing_only_once(counts))
+        "unique_words": word_analysis.unique_words(dict_words),
+        "words_appearing_once": len(word_analysis.words_appearing_only_once(dict_words))
     }
 
-    results = {"filename": filename, "data": data, "counts": counts}
+    results = {"filename": filename, "data": data, "counts": dict_words}
 
 
 def is_loaded():
     return bool(results)
 
+def get_line_count():
+    return results["data"]["number_of_lines"] if is_loaded() else 0
 
 def get_basic_stats():
     d = results["data"]
     return {
-        "lines": d["number_of_lines"],
-        "words": d["number_of_words"],
-        "characters (with spaces)": d["number_of_characters_with_spaces"],
-        "characters (no spaces)": d["number_of_characters"],
-        "avg words per line": d["avg_word_per_line"],
-        "avg characters per word": d["avg_character_per_word"],
+        "Lines": d["number_of_lines"],
+        "Paragraphs": d["number_of_sentences"],
+        "Sentences": d["number_of_sentences"],
+        "Words": d["number_of_words"],
+        "Unique Words": d["unique_words"],
+        "Characters (with spaces)": d["number_of_characters_with_spaces"],
+        "Characters (without spaces)": d["number_of_characters"],
+        "Average words per line": d["avg_word_per_line"],
+        "Average word length": d["avg_character_per_word"],
+        "Average words per sentence": d["avg_word_per_sentences"],
     }
 
 
 def get_word_frequency():
     d = results["data"]
     return {
-        "top 10": word_analysis.top10(results["counts"]),
-        "unique words": d["unique_words"],
-        "words appearing once": d["words_appearing_once"],
+        "Top 10": word_analysis.top10(results["counts"]),
+        "Shortest word": word_analysis.shortest_word(results["counts"]),
+        "Longest word": word_analysis.longest_word(results["counts"]),
+        "Average word length": d["avg_character_per_word"],
+        "Words appearing once": d["words_appearing_once"],
     }
 
 
 def get_sentence_stats():
     d = results["data"]
     return {
-        "sentence count": d["number_of_sentences"],
-        "avg words per sentence": d["avg_word_per_sentences"],
-        "longest sentence": d["longest_sentence"],
-        "shortest sentence": d["shortest_sentence"],
-        "sentence length distribution": d["sentence_len_distribution"],
+        "Total sentences": d["number_of_sentences"],
+        "Average words per sentence": d["avg_word_per_sentences"],
+        "Longest sentence": d["longest_sentence"],
+        "Shortest sentence": d["shortest_sentence"],
+        "Sentence length distribution": d["sentence_len_distribution"]
     }
 
 
 def get_character_stats():
     d = results["data"]
     return {
-        "with spaces": d["number_of_characters_with_spaces"],
-        "without spaces": d["number_of_characters"],
-        "lowercase letters": d["number_of_lowercase"],
-        "uppercase letters": d["number_of_uppercase"],
-        "letter frequency": d["character_frequency"],
-        "punctuation frequency": d["punctuation_frequency"],
+        "Characters (with spaces)": d["number_of_characters_with_spaces"],
+        "Characters (without spaces)": d["number_of_characters"],
+        "Lowercase letters": d["number_of_lowercase"],
+        "Uppercase letters": d["number_of_uppercase"],
+        "Letter frequency": d["character_frequency"],
+        "Punctuation frequency": d["punctuation_frequency"],
     }
 
 
 def export_results():
-    """Write the analysis to backend/database/data.json and return the path."""
     os.makedirs(DATABASE_DIR, exist_ok=True)
     out_path = os.path.join(DATABASE_DIR, "data.json")
     with open(out_path, "w", encoding="utf-8") as f:

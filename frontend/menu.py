@@ -1,4 +1,5 @@
 import os
+import json
 from backend import backend
 
 def clear_screen():
@@ -32,43 +33,99 @@ def menu():
         else: 
             print("No file loaded")
         
-        n = int(input("Enter a number (1-7) to select a menu option, or 7 to exit: "))
+        try:
+            n = int(input("\nEnter a number (1-7) to select a menu option, or 7 to exit:"))
+        except ValueError:
+            print("Please enter a number next time.")
+            input("\nPress Enter to continue...")
+            n = 0
+            continue
     
     
         if n == 1:
-            print("--- File Selection ---")
+            print("\n--- File Selection ---")
             books = backend.list_books()
 
             if not books:
                 print("No books found")
             else:
+                print("Available text files:")
                 for i, book in enumerate(books, start=1):
-                    print(f'{i}. {book}')
+                    print(f"{i}. {book}")
 
-                try:
-                    pick = int(input("Enter the number of the file to load (0 to cancel): "))
-                except ValueError:
-                    print("Pleae enter a number ")
+                choice = input("\nEnter a number or file name (0 to cancel): ")
+
+                if choice.strip() == "0":
+                    print("Cancelled.")
                 else:
-                    if pick == 0:
-                        print("cancelled")
-                    elif 1 <= pick <= len(books):
-                        current_file = books[pick - 1]
-                        backend.process_book(current_file)
+                    picked = backend.choose_books(choice)
+                    if picked is None:
+                        print("\nFile does not exist.")
+                        input("\nPress Enter to continue...")
                     else:
-                        print("That number isn't in the list")
+                        current_file = picked
+                        print(f'\nAnalysing {current_file}...')
+                        backend.process_book(current_file)
+                        print(f'Analysis complete! Processed {backend.get_line_count()} lines')
+                        print(f'Successfully loaded and analysed "{current_file}"')
+                        input("\nPress Enter to continue...")
                 
         elif n == 2:
-            print("You selected option 2: Display basic statistics.")
+            print(f'\n--- Basic Statistics for "{current_file}" ---')
+            show(backend.get_basic_stats())
+            
+            print("\nGenerating basic statistics visualisation...")
+            input("\nPress Enter to continue...")
+            
         elif n == 3:
-            print("You selected option 3: Word frequency analysis.")
+            print(f'\n--- Word Frequency Analysis for "{current_file}" ---')
+            stats = backend.get_word_frequency()
+
+            print("Top 10 most common words:")
+            for i, (word, count, percentage) in enumerate(stats["Top 10"], start=1):
+                print(f"{i}. {word:<10}{count} ({percentage:.1f}%)")
+
+            print("\nWord length statistics:")
+            print(f"    Shortest word: {len(stats['Shortest word'])} characters")
+            print(f"    Longest word: {len(stats['Longest word'])} characters")
+            print(f"    Average word length: {stats['Average word length']:.1f} characters")
+            print(f"Words appearing once: {stats['Words appearing once']}")
+
+            print("\nGenerating word frequency visualisation...")
+            input("\nPress Enter to continue...")
+            
         elif n == 4:
-            print("You selected option 4: Sentence analysis.")
+            print(f'\n--- Sentence Analysis for "{current_file}" ---')
+            stats = backend.get_sentence_stats()
+            print(f"Total sentences: {stats['Total sentences']}")
+            print(f"Average words per sentence: {stats['Average words per sentence']:.1f}")
+            print(f"Longest sentence: {len(stats['Longest sentence'])} words")
+            print(f"Shortest sentence: {len(stats['Shortest sentence'])} words")
+
+            print(f"\nShortest sentence text: {stats['Shortest sentence']}")
+            print(f"Longest sentence text: {stats['Longest sentence']}")
+            
+            print("\nSentence length distribution (top 5):")
+            for i, (sentence_len, count) in enumerate(stats['Sentence length distribution'].items(), start=1):
+                print(f"{i}. {sentence_len} words: {count} sentences")
+
+            print("\nGenerating sentence analysis visualisation...")
+            input("\nPress Enter to continue...")
+            
         elif n == 5:
-            print("You selected option 5: Character analysis.")
+            print(f'\n--- Character Analysis for "{current_file}" ---')
+            show(backend.get_character_stats())
+            print("\nGenerating character analysis visualisation...")
+            input("\nPress Enter to continue...")
+            
         elif n == 6:
-            print("You selected option 6: Export results.")
+            print(f'\n--- Export Results for "{current_file}" ---')
+            backend.export_results()
+            print("\nExporting results...")
+            input("\nPress Enter to continue...")
+            
         elif n == 7:
-            print("Exiting the program. Goodbye!")
+            print("Thank you for using Text Analyser!")
         else:
             print("Invalid option. Please enter a number between 1 and 7.")
+            input("\nPress Enter to continue...")
