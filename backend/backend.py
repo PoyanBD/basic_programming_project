@@ -16,20 +16,22 @@ results = {}
 def list_books():
     return file_loading.check_library()
 
+
 def choose_books(choice):
     books = list_books()
     choice = choice.strip()
-    
+
     if choice.isdigit():
         number = int(choice)
         if 1 <= number <= len(books):
             return books[number - 1]
         return None
-    
+
     for book in books:
         if choice.lower() in (book.lower(), book.lower().removesuffix(".txt")):
             return book
     return None
+
 
 def process_book(filename):
     global results
@@ -51,8 +53,10 @@ def process_book(filename):
             line_count += 1
 
             words_in_line = basic_statistics.line_to_words(line)
+
             if words_in_line != [""]:
                 word_count += len(words_in_line)
+
             if words_in_line == [""]:
                 paragraph_count += 1
 
@@ -146,8 +150,10 @@ def load_book(filename):
 def is_loaded():
     return bool(results)
 
+
 def get_line_count():
     return results["data"]["number_of_lines"] if is_loaded() else 0
+
 
 def get_basic_stats():
     d = results["data"]
