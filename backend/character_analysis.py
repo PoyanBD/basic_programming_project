@@ -3,13 +3,14 @@ def letter_frequency(words, dict_characters):
     line_stringfy = ""
 
     for word in words:
-        line_stringfy += word.lower().strip(".,!?;:\"'()[]{}")
+        line_stringfy += word.lower().strip(r".,-!?;:\"'“”’()[]{}")
 
     for character in line_stringfy:
-        if character in this_dict:
-            this_dict[character] += 1
-        else:
-            this_dict[character] = 1
+        if character.isalpha() == True:
+            if character in this_dict:
+                this_dict[character] += 1
+            else:
+                this_dict[character] = 1
 
     return this_dict
 
@@ -38,7 +39,7 @@ def case_distribution(words, lower_characters, upper_characters):
     line_stringfy = ""
 
     for word in words:
-        line_stringfy += word.strip(".,!?;:\"'()[]{}")
+        line_stringfy += word.strip(r".,!?;:\"'()[]{}")
 
     for character in line_stringfy:
         if character.islower():
