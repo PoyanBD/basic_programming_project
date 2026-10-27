@@ -79,8 +79,5 @@ def sentence_len_distribution(sentences, dict_sentence_len):
             this_dict[sentence_len] += 1
         else:
             this_dict[sentence_len] = 1
-            
-    top = sorted(this_dict.items(), key=lambda item: (-item[1], item[0]))[:5]
-    this_dict = dict(top)
     
     return this_dict
