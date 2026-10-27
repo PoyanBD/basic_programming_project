@@ -4,3 +4,6 @@ library/*
 __pycache__
 pyproject.toml
 .idea
+backend/database/data.json
+.env
+.vscode
