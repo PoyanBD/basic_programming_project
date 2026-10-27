@@ -61,21 +61,14 @@ def process_book(filename):
             character_count_nospace += int(chars_without)
 
             sentence_count += sentence_analysis.sentence_counter(line)
-            sentences, current_sentence = sentence_analysis.sentences_in_line(
-                line, current_sentence)
-            longest_sentence = sentence_analysis.long_sentence(
-                longest_sentence, sentences)
-            shortest_sentence = sentence_analysis.short_sentence(
-                shortest_sentence, sentences)
-            dict_sentence_len = sentence_analysis.sentence_len_distribution(
-                sentences, dict_sentence_len)
+            sentences, current_sentence = sentence_analysis.sentences_in_line(line, current_sentence)
+            longest_sentence = sentence_analysis.long_sentence(longest_sentence, sentences)
+            shortest_sentence = sentence_analysis.short_sentence(shortest_sentence, sentences)
+            dict_sentence_len = sentence_analysis.sentence_len_distribution(sentences, dict_sentence_len)
 
-            dict_characters = character_analysis.letter_frequency(
-                words_in_line, dict_characters)
-            dict_punctuations = character_analysis.punctuation_statistics(
-                words_in_line, dict_punctuations)
-            lower_case_count, upper_case_count = character_analysis.case_distribution(
-                words_in_line, lower_case_count, upper_case_count)
+            dict_characters = character_analysis.letter_frequency(words_in_line, dict_characters)
+            dict_punctuations = character_analysis.punctuation_statistics(words_in_line, dict_punctuations)
+            lower_case_count, upper_case_count = character_analysis.case_distribution(words_in_line, lower_case_count, upper_case_count)
 
             dict_words = word_analysis.count_words(words_in_line, dict_words)
 
@@ -99,12 +92,56 @@ def process_book(filename):
         "punctuation_frequency": dict(sorted(dict_punctuations.items())),
         "number_of_lowercase": lower_case_count,
         "number_of_uppercase": upper_case_count,
+        "Most_common_words": word_analysis.most_common_words(dict_words),
+        "Shortest_word": word_analysis.shortest_word(dict_words),
+        "Longest_word": word_analysis.longest_word(dict_words),
+        "Word_length_distribution": word_analysis.word_length_distribution(dict_words),
         "unique_words": word_analysis.unique_words(dict_words),
-        "words_appearing_once": len(word_analysis.words_appearing_only_once(dict_words))
+        "Words_appearing_once": len(word_analysis.words_appearing_only_once(dict_words)),
+        "Word_length_distribution": word_analysis.word_length_distribution(dict_words)
     }
 
-    results = {"filename": filename, "data": data, "counts": dict_words}
+    results = {"filename": filename, "data": data, "dict_words": dict_words}
 
+def cache_path(filename):
+    name = os.path.splitext(filename)[0]
+    return os.path.join(DATABASE_DIR, f"{name}.json")
+
+
+def read_cache(filename):
+    book_path = os.path.join(LIBRARY_DIR, filename)
+    try:
+        with open(cache_path(filename), "r", encoding="utf-8") as f:
+            saved = json.load(f)
+        if saved["source_mtime"] == os.path.getmtime(book_path):
+            return saved["data"]
+    except (FileNotFoundError, json.JSONDecodeError, KeyError):
+        pass
+    return None
+
+
+def save_cache(filename):
+    os.makedirs(DATABASE_DIR, exist_ok=True)
+    book_path = os.path.join(LIBRARY_DIR, filename)
+    saved = {
+        "source_mtime": os.path.getmtime(book_path),
+        "data": results["data"],
+    }
+    with open(cache_path(filename), "w", encoding="utf-8") as f:
+        json.dump(saved, f, ensure_ascii=False)
+
+
+def load_book(filename):
+    global results
+
+    data = read_cache(filename)
+    if data is not None:
+        results = {"filename": filename, "data": data}
+        return True
+
+    process_book(filename)
+    save_cache(filename)
+    return False
 
 def is_loaded():
     return bool(results)
@@ -131,11 +168,12 @@ def get_basic_stats():
 def get_word_frequency():
     d = results["data"]
     return {
-        "Top 10": word_analysis.top10(results["counts"]),
-        "Shortest word": word_analysis.shortest_word(results["counts"]),
-        "Longest word": word_analysis.longest_word(results["counts"]),
-        "Average word length": d["avg_character_per_word"],
-        "Words appearing once": d["words_appearing_once"],
+        "Most_common_words": d["Most_common_words"],
+        "Shortest_word": d["Shortest_word"],
+        "Longest_word": d["Longest_word"],
+        "Average_word_length": d["avg_character_per_word"],
+        "Word_length_distribution": d["Word_length_distribution"],
+        "Words_appearing_once": d["Words_appearing_once"],
     }
 
 
@@ -165,6 +203,10 @@ def get_character_stats():
 def export_results():
     os.makedirs(DATABASE_DIR, exist_ok=True)
     out_path = os.path.join(DATABASE_DIR, "data.json")
+
+    export = dict(results["data"])
+    export["Most_common_words"] = export["Most_common_words"][:100]
+
     with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(results["data"], f, ensure_ascii=False, indent=2)
+        json.dump(export, f, ensure_ascii=False, indent=2)
     return out_path

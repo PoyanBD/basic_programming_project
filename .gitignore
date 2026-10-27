@@ -4,3 +4,4 @@ library/*
 __pycache__
 pyproject.toml
 .idea
+.backend/database/*
