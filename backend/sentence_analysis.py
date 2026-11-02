@@ -21,26 +21,38 @@ def words_per_sentence(words, sentences):
 def sentences_in_line(line, sentence):
     sentence_exceptions = [
         "Mr.", "Mrs.", "Miss.", "Ms.", "Mx.", "Sir.", "Dame.", "Dr.", "Cllr.",
-        "Lady.", "Lord.", "I."
+        "Lady.", "Lord.", "I.","i.e.","No.","O.U."
     ]
     full_sentences = []
     last_five_characters = ""
     line_index = 0
     for character in line:
-        last_five_characters += character
-        if len(last_five_characters) >= 5:
-            last_five_characters = last_five_characters[1:5]
+        last_five_characters = (last_five_characters + character) [-5:]
 
         if character != "!" and character != "." and character != "?":
             sentence += character
         else:
-            end_sentence = -1
+            end_sentence = True
             for exception in sentence_exceptions:
-                if end_sentence == -1:
-                    end_sentence = last_five_characters.find(exception)
-            if character == "." and line[line_index + 1] == ".":
-                end_sentence = 1
-            if end_sentence == -1:
+                if last_five_characters.endswith(exception):
+                    end_sentence = False
+
+            character_index_n1=line[line_index -1]
+
+            if character == "." and line[line_index - 1] == "." or line[line_index + 1] == ".":
+                end_sentence = False
+            if character == "." and character_index_n1.isupper():
+                end_sentence= False
+            if  character == "."and character_index_n1.isnumeric():
+                end_sentence=False
+
+            if character == "”" and line[line_index - 1] == ".":
+                end_sentence = True
+
+            if end_sentence and line[line_index + 1:line_index + 2]==")":
+                end_sentence=False
+
+            if end_sentence:
                 sentence += character
                 full_sentences.append(sentence)
                 sentence = ""
@@ -66,6 +78,7 @@ def short_sentence(shortest_sentence, sentences):
             shortest_sentence = this_sentence
         if len(shortest_sentence) > len(this_sentence):
             shortest_sentence = this_sentence
+            print(sentences)
 
     return (shortest_sentence)
 
