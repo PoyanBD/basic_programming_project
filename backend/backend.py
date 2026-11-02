@@ -10,6 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LIBRARY_DIR = os.path.join(BASE_DIR, "library")
 DATABASE_DIR = os.path.join(BASE_DIR, "backend", "database")
 
+# Global variable to store the results of the analysis from the JSON file. Used across mutiple functions to avoid reprocessing the same file multiple times.
 results = {}
 
 
@@ -76,6 +77,7 @@ def process_book(filename):
 
             dict_words = word_analysis.count_words(words_in_line, dict_words)
 
+    # All variables being stored in a dictionary.
     data = {
         "number_of_lines": line_count,
         "number_of_words": word_count,
@@ -107,11 +109,12 @@ def process_book(filename):
 
     results = {"filename": filename, "data": data, "dict_words": dict_words}
 
+# Finds the book's path in the database directory.
 def cache_path(filename):
     name = os.path.splitext(filename)[0]
     return os.path.join(DATABASE_DIR, f"{name}.json")
 
-
+# Reads the cached data from the database directory if it exists and is up to date. If not, returns None.
 def read_cache(filename):
     book_path = os.path.join(LIBRARY_DIR, filename)
     try:
@@ -123,7 +126,7 @@ def read_cache(filename):
         pass
     return None
 
-
+# Saves the analysis results to the database directory for future use.
 def save_cache(filename):
     os.makedirs(DATABASE_DIR, exist_ok=True)
     book_path = os.path.join(LIBRARY_DIR, filename)
@@ -134,7 +137,7 @@ def save_cache(filename):
     with open(cache_path(filename), "w", encoding="utf-8") as f:
         json.dump(saved, f, ensure_ascii=False)
 
-
+# Loads the book's analysis results from the cache if available, otherwise processes the book and saves the results to the cache.
 def load_book(filename):
     global results
 
@@ -205,13 +208,13 @@ def get_character_stats():
         "Punctuation frequency": d["punctuation_frequency"],
     }
 
-
+# Exports the analysis results to a JSON file in the database directory, including the top 10 most common words.
 def export_results():
     os.makedirs(DATABASE_DIR, exist_ok=True)
     out_path = os.path.join(DATABASE_DIR, "data.json")
 
     export = dict(results["data"])
-    export["Most_common_words"] = export["Most_common_words"][:100]
+    export["Most_common_words"] = export["Most_common_words"][:10]
 
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(export, f, ensure_ascii=False, indent=2)

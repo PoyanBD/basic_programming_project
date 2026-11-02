@@ -1,5 +1,5 @@
 def count_words(words_in_line, dict_words):
-    PUNCTUATION = ".,!?;:\"'()[]{}»«–—…"
+    PUNCTUATION = ".,!?;:\"'()[]{}"
     for word in words_in_line:
         word = word.lower().strip(PUNCTUATION)
         if word and any(ch.isalnum() for ch in word):

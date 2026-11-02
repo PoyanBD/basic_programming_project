@@ -1,5 +1,4 @@
 import os
-import json
 from backend import backend
 
 def clear_screen():
@@ -72,7 +71,8 @@ def menu():
                             print("Analysis complete and saved.")
                         print(f'Processed {backend.get_line_count()} lines')
                         input("\nPress Enter to continue...")
-           
+        
+        # Check if a file is loaded before proceeding with other options   
         elif n in (2, 3, 4, 5, 6) and not backend.is_loaded():
             print("\nLoad a file first (option 1).")
             input("\nPress Enter to continue...")
@@ -99,8 +99,7 @@ def menu():
             print(f"Words appearing once: {stats['Words_appearing_once']}")
 
             print("\nWord length distribution (top 5):")
-            common_lengths = sorted(stats["Word_length_distribution"].items(),
-                                    key=lambda item: (-item[1], item[0]))[:5]
+            common_lengths = sorted(stats["Word_length_distribution"].items(), key=lambda item: (-item[1], item[0]))[:5]
             for i, (word_len, count) in enumerate(common_lengths, start=1):
                 print(f"{i}. {word_len} characters: {count} words")
 
@@ -119,8 +118,7 @@ def menu():
             print(f"Longest sentence text: {stats['Longest sentence']}")
             
             print("\nSentence length distribution (top 5):")
-            common = sorted(stats["Sentence length distribution"].items(),
-                            key=lambda item: (-item[1], item[0]))[:5]
+            common = sorted(stats["Sentence length distribution"].items(), key=lambda item: (-item[1], item[0]))[:5]
             for i, (sentence_len, count) in enumerate(common, start=1):
                 print(f"{i}. {sentence_len} words: {count} sentences")
 
@@ -133,8 +131,7 @@ def menu():
             print("Character type distribution:")
         
             print("\nMost Common Letters (top 10):")
-            common = sorted(stats["Letter frequency"].items(),
-                            key=lambda item: (-item[1], item[0]))[:10]
+            common = sorted(stats["Letter frequency"].items(), key=lambda item: (-item[1], item[0]))[:10]
             for i, (char, count) in enumerate(common, start=1):
                 print(f"{i}. {char}: {count}")
                 
