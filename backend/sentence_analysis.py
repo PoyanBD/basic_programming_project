@@ -78,7 +78,6 @@ def short_sentence(shortest_sentence, sentences):
             shortest_sentence = this_sentence
         if len(shortest_sentence) > len(this_sentence):
             shortest_sentence = this_sentence
-            print(sentences)
 
     return (shortest_sentence)
 
