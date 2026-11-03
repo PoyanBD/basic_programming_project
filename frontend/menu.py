@@ -1,5 +1,6 @@
 import os
 from backend import backend
+from frontend import visualisations
 
 def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
@@ -136,6 +137,7 @@ def menu():
                 print(f"{i}. {char}: {count}")
                 
             print("\nGenerating character analysis visualisation...")
+            visualisations.character_frequency_visual(stats["Letter frequency"])
             input("\nPress Enter to continue...")
             
         elif n == 6:
