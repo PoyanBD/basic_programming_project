@@ -116,7 +116,7 @@ def process_book(filename):
 # Finds the book's cache file in the database directory.
 def cache_path(filename):
     name = os.path.splitext(filename)[0]
-    return os.path.join(DATABASE_DIR, f"{name}.json")
+    return os.path.join(DATABASE_DIR, f'{name}.json')
 
 
 # JSON turns int keys into strings, so convert them back after reading the cache.
@@ -257,49 +257,49 @@ def build_report(data, filename):
     shortest = data["shortest_sentence"]
 
     lines = ["=" * REPORT_WIDTH, "TEXT ANALYSIS RESULTS", "=" * REPORT_WIDTH,
-             f"File analysed: {filename}",
-             f"Analysis date: {data['analyzed_at']}"]
+             f'File analysed: {filename}',
+             f'Analysis date: {data["analyzed_at"]}']
 
     lines += section("BASIC STATISTICS", 20)
-    lines += [f"Lines: {data['number_of_lines']:,}",
-              f"Paragraphs: {data['number_of_paragraphs']:,}",
-              f"Sentences: {data['number_of_sentences']:,}",
-              f"Words: {data['number_of_words']:,}",
-              f"Unique words: {data['unique_words']:,}",
-              f"Characters (with spaces): {total_chars:,}",
-              f"Characters (without spaces): {data['number_of_characters']:,}",
-              f"Average words per line: {data['avg_word_per_line']:.1f}",
-              f"Average word length: {data['avg_character_per_word']:.1f} characters",
-              f"Average words per sentence: {data['avg_word_per_sentences']:.1f}"]
+    lines += [f'Lines: {data["number_of_lines"]:,}',
+              f'Paragraphs: {data["number_of_paragraphs"]:,}',
+              f'Sentences: {data["number_of_sentences"]:,}',
+              f'Words: {data["number_of_words"]:,}',
+              f'Unique words: {data["unique_words"]:,}',
+              f'Characters (with spaces): {total_chars:,}',
+              f'Characters (without spaces): {data["number_of_characters"]:,}',
+              f'Average words per line: {data["avg_word_per_line"]:.1f}',
+              f'Average word length: {data["avg_character_per_word"]:.1f} characters',
+              f'Average words per sentence: {data["avg_word_per_sentences"]:.1f}']
 
     lines += section("TOP 10 MOST COMMON WORDS", 30)
     for i, (word, count, pct) in enumerate(data["Most_common_words"][:10], start=1):
-        lines.append(f"{i:>2}. {word:<10}{count:>8,} times ({pct:>4.1f}%)")
+        lines.append(f'{i:>2}. {word:<10}{count:>8,} times ({pct:>4.1f}%)')
 
     lines += section("WORD STATISTICS", 20)
-    lines += [f"Shortest word: {len(data['Shortest_word'])} characters",
-              f"Longest word: {len(data['Longest_word'])} characters",
-              f"Words appearing only once: {data['Words_appearing_once']:,}"]
+    lines += [f'Shortest word: {len(data["Shortest_word"])} characters',
+              f'Longest word: {len(data["Longest_word"])} characters',
+              f'Words appearing only once: {data["Words_appearing_once"]:,}']
 
     lines += section("SENTENCE STATISTICS", 25)
-    lines += [f"Total sentences: {data['number_of_sentences']:,}",
-              f"Shortest sentence: {len(shortest.split())} words",
-              f"Longest sentence: {len(longest.split())} words",
-              f"Shortest sentence text: {one_line(shortest)}",
-              f"Longest sentence text: {one_line(longest)}"]
+    lines += [f'Total sentences: {data["number_of_sentences"]:,}',
+              f'Shortest sentence: {len(shortest.split())} words',
+              f'Longest sentence: {len(longest.split())} words',
+              f'Shortest sentence text: {one_line(shortest)}',
+              f'Longest sentence text: {one_line(longest)}']
 
     lines += section("CHARACTER STATISTICS", 25)
-    lines += [f"Letters: {letters:,} ({percent(letters, total_chars):.1f}%)",
-              f"Digits: {digits:,} ({percent(digits, total_chars):.1f}%)",
-              f"Spaces: {spaces:,} ({percent(spaces, total_chars):.1f}%)",
-              f"Punctuation: {punctuation:,} ({percent(punctuation, total_chars):.1f}%)"]
+    lines += [f'Letters: {letters:,} ({percent(letters, total_chars):.1f}%)',
+              f'Digits: {digits:,} ({percent(digits, total_chars):.1f}%)',
+              f'Spaces: {spaces:,} ({percent(spaces, total_chars):.1f}%)',
+              f'Punctuation: {punctuation:,} ({percent(punctuation, total_chars):.1f}%)']
 
     lines += section("TOP 10 MOST COMMON LETTERS", 30)
     for i, (letter, count) in enumerate(top_items(data["character_frequency"], 10), start=1):
-        lines.append(f"{i:>2}. '{letter}' - {count:>8,} times ({percent(count, letter_total):.1f}%)")
+        lines.append(f'{i:>2}. \'{letter}\' - {count:>8,} times ({percent(count, letter_total):.1f}%)')
 
     lines += section("READABILITY", 20)
-    lines.append(f"LIX readability score: {lix_value(data)}")
+    lines.append(f'LIX readability score: {lix_value(data)}')
 
     lines += ["", "=" * REPORT_WIDTH, "End of Analysis Report", "=" * REPORT_WIDTH]
     return "\n".join(lines)
@@ -310,7 +310,7 @@ def build_report(data, filename):
 def export_results(data, filename):
     os.makedirs(DATABASE_DIR, exist_ok=True)
     name = os.path.splitext(filename)[0]
-    out_path = os.path.join(DATABASE_DIR, f"{name}_results.json")
+    out_path = os.path.join(DATABASE_DIR, f'{name}_results.json')
 
     export = dict(data)
     export["Most_common_words"] = export["Most_common_words"][:10]

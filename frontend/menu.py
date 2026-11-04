@@ -10,10 +10,10 @@ def clear_screen():
 def show(data, indent=0):
     for key, value in data.items():
         if isinstance(value, dict):
-            print(" " * indent + f"{key}:")
+            print(" " * indent + f'{key}:')
             show(value, indent + 2)
         else:
-            print(" " * indent + f"{key}: {value}")
+            print(" " * indent + f'{key}: {value}')
 
 
 def print_menu(current_file):
@@ -24,7 +24,7 @@ def print_menu(current_file):
     print("=" * 50)
 
     if current_file:
-        print(f"Current file: {current_file}")
+        print(f'Current file: {current_file}')
     else:
         print("No file loaded")
 
@@ -45,7 +45,7 @@ def load_file(current_file, data):
 
     print("Available text files:")
     for i, book in enumerate(books, start=1):
-        print(f"{i}. {book}")
+        print(f'{i}. {book}')
 
     choice = input("\nEnter a number or file name (0 to cancel): ")
 
@@ -58,13 +58,13 @@ def load_file(current_file, data):
         print("\nFile does not exist.")
         return current_file, data
 
-    print(f"\nLoading {picked}...")
+    print(f'\nLoading {picked}...')
     new_data, from_cache = backend.load_book(picked)
     if from_cache:
         print("Loaded saved analysis (no need to analyse again).")
     else:
         print("Analysis complete and saved.")
-    print(f"Processed {backend.get_line_count(new_data)} lines")
+    print(f'Processed {backend.get_line_count(new_data)} lines')
     return picked, new_data
 
 
@@ -73,7 +73,7 @@ def show_basic_stats(data, current_file):
     print(f'\n--- Basic Statistics for "{current_file}" ---')
     stats = backend.get_basic_stats(data)
     show(stats)
-    print(f"\nLIX Readability Score: {backend.lix_value(data)}")
+    print(f'\nLIX Readability Score: {backend.lix_value(data)}')
 
     print("\nGenerating basic statistics visualisation...")
     visualisations.text_composition(stats["Lines"], stats["Sentences"], stats["Unique Words"], stats["Paragraphs"])
@@ -87,17 +87,17 @@ def show_word_analysis(data, current_file):
 
     print("Top 10 most common words:")
     for i, (word, count, percentage) in enumerate(stats["Most_common_words"][:10], start=1):
-        print(f"{i}. {word:<10}{count} ({percentage:.1f}%)")
+        print(f'{i}. {word:<10}{count} ({percentage:.1f}%)')
 
     print("\nWord length statistics:")
-    print(f"    Shortest word: {len(stats['Shortest_word'])} characters")
-    print(f"    Longest word: {len(stats['Longest_word'])} characters")
-    print(f"    Average word length: {stats['Average_word_length']:.1f} characters")
-    print(f"Words appearing once: {stats['Words_appearing_once']}")
+    print(f'    Shortest word: {len(stats["Shortest_word"])} characters')
+    print(f'    Longest word: {len(stats["Longest_word"])} characters')
+    print(f'    Average word length: {stats["Average_word_length"]:.1f} characters')
+    print(f'Words appearing once: {stats["Words_appearing_once"]}')
 
     print("\nWord length distribution (top 5):")
     for i, (word_len, count) in enumerate(sort_by_count(stats["Word_length_distribution"], 5), start=1):
-        print(f"{i}. {word_len} characters: {count} words")
+        print(f'{i}. {word_len} characters: {count} words')
 
     print("\nGenerating word frequency visualisation...")
     visualisations.common_word_frequency(stats["Most_common_words"][:10])
@@ -111,18 +111,18 @@ def show_sentence_analysis(data, current_file):
     longest = stats["Longest sentence"]
     shortest = stats["Shortest sentence"]
 
-    print(f"Total sentences: {stats['Total sentences']}")
-    print(f"Average words per sentence: {stats['Average words per sentence']:.1f}")
-    print(f"Longest sentence: {len(longest.split())} words")
-    print(f"Shortest sentence: {len(shortest.split())} words")
+    print(f'Total sentences: {stats["Total sentences"]}')
+    print(f'Average words per sentence: {stats["Average words per sentence"]:.1f}')
+    print(f'Longest sentence: {len(longest.split())} words')
+    print(f'Shortest sentence: {len(shortest.split())} words')
 
-    print(f"\nShortest sentence text: {shortest}")
-    print(f"Longest sentence text: {longest}")
+    print(f'\nShortest sentence text: {shortest}')
+    print(f'Longest sentence text: {longest}')
 
     print("\nSentence length distribution (top 5):")
     common = sort_by_count(stats["Sentence length distribution"], 5)
     for i, (sentence_len, count) in enumerate(common, start=1):
-        print(f"{i}. {sentence_len} words: {count} sentences")
+        print(f'{i}. {sentence_len} words: {count} sentences')
 
     print("\nGenerating sentence analysis visualisation...")
     visualisations.sentence_length_distribution(stats["Sentence length distribution"])
@@ -135,14 +135,14 @@ def show_character_analysis(data, current_file):
     stats = backend.get_character_stats(data)
 
     print("Character type distribution:")
-    print(f"    Lowercase letters: {stats['Lowercase letters']}")
-    print(f"    Uppercase letters: {stats['Uppercase letters']}")
-    print(f"    Punctuation marks: {sum(stats['Punctuation frequency'].values())}")
+    print(f'    Lowercase letters: {stats["Lowercase letters"]}')
+    print(f'    Uppercase letters: {stats["Uppercase letters"]}')
+    print(f'    Punctuation marks: {sum(stats["Punctuation frequency"].values())}')
 
     print("\nMost Common Letters (top 10):")
     common = sort_by_count(stats["Letter frequency"], 10)
     for i, (char, count) in enumerate(common, start=1):
-        print(f"{i}. {char}: {count}")
+        print(f'{i}. {char}: {count}')
 
     print("\nGenerating character analysis visualisation...")
     visualisations.character_frequency_visual(stats["Letter frequency"])
@@ -155,7 +155,7 @@ def export_analysis(data, current_file):
     print(report)
 
     path = backend.export_results(data, current_file)
-    print(f"\nResults saved to {path}")
+    print(f'\nResults saved to {path}')
 
 
 # Menu options that need a loaded book. Each takes (data, current_file).
