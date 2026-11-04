@@ -65,8 +65,8 @@ def process_book(filename):
             character_count_space += int(chars_with)
             character_count_nospace += int(chars_without)
 
-            sentence_count += sentence_analysis.sentence_counter(line)
-            sentences, current_sentence = sentence_analysis.sentences_in_line(line, current_sentence)
+            sentences, current_sentence, sentences_in_line = sentence_analysis.sentences_in_line(line, current_sentence)
+            sentence_count += sentences_in_line
             longest_sentence = sentence_analysis.long_sentence(longest_sentence, sentences)
             shortest_sentence = sentence_analysis.short_sentence(shortest_sentence, sentences)
             dict_sentence_len = sentence_analysis.sentence_len_distribution(sentences, dict_sentence_len)

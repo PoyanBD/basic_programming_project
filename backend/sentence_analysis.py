@@ -19,6 +19,7 @@ def words_per_sentence(words, sentences):
 
 
 def sentences_in_line(line, sentence):
+    sentences_in_line = 0
     sentence_exceptions = [
         "Mr.", "Mrs.", "Miss.", "Ms.", "Mx.", "Sir.", "Dame.", "Dr.", "Cllr.",
         "Lady.", "Lord.", "I.","i.e.","No.","O.U."
@@ -45,7 +46,8 @@ def sentences_in_line(line, sentence):
                 end_sentence= False
             if  character == "."and character_index_n1.isnumeric():
                 end_sentence=False
-
+            if character == "." and line[line_index + 1:line_index+2] == "”":
+                end_sentence = False
             if character == "”" and line[line_index - 1] == ".":
                 end_sentence = True
 
@@ -53,13 +55,15 @@ def sentences_in_line(line, sentence):
                 end_sentence=False
 
             if end_sentence:
+
                 sentence += character
                 full_sentences.append(sentence)
+                sentences_in_line += 1
                 sentence = ""
             else:
                 sentence += character
         line_index += 1
-    return (full_sentences, sentence)
+    return (full_sentences, sentence,sentences_in_line)
 
 
 def long_sentence(longest_sentence, sentences):
@@ -74,6 +78,7 @@ def long_sentence(longest_sentence, sentences):
 def short_sentence(shortest_sentence, sentences):
     for sentence in sentences:
         this_sentence = sentence.replace("\n", " ").strip()
+        
         if shortest_sentence == "":
             shortest_sentence = this_sentence
         if len(shortest_sentence) > len(this_sentence):
