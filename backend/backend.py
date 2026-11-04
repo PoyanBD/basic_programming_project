@@ -6,6 +6,7 @@ from backend import file_loading
 from backend import word_analysis
 from backend import sentence_analysis
 from backend import character_analysis
+from backend import lix
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LIBRARY_DIR = os.path.join(BASE_DIR, "library")
@@ -226,3 +227,9 @@ def export_results():
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(export, f, ensure_ascii=False, indent=2)
     return out_path
+
+def lix_value():
+    d= results["data"]
+
+    long_word_count=lix.long_words_count(d["Word_length_distribution"])
+    return(lix.lix_stat(d["number_of_words"],d["number_of_sentences"],long_word_count))
