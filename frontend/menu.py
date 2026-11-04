@@ -4,7 +4,11 @@ from frontend import visualisations
 
 
 def clear_screen():
-    os.system("cls" if os.name == "nt" else "clear")
+    try:
+        from IPython.display import clear_output
+        clear_output(wait=True)
+    except ImportError:
+        os.system("cls" if os.name == "nt" else "clear")
 
 
 def show(data, indent=0):
