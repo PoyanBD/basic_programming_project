@@ -1,5 +1,6 @@
 import os
 import json
+from datetime import datetime
 from backend import basic_statistics
 from backend import file_loading
 from backend import word_analysis
@@ -17,6 +18,10 @@ results = {}
 def list_books():
     return file_loading.check_library()
 
+def get_analysis_date():
+    if not results:
+        return None
+    return results["data"].get("analyzed_at")
 
 def choose_books(choice):
     books = list_books()
@@ -79,6 +84,7 @@ def process_book(filename):
 
     # All variables being stored in a dictionary.
     data = {
+        "analyzed_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "number_of_lines": line_count,
         "number_of_words": word_count,
         "number_of_characters_with_spaces": character_count_space,

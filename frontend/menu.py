@@ -83,6 +83,8 @@ def menu():
             show(backend.get_basic_stats())
             
             print("\nGenerating basic statistics visualisation...")
+            visualisations.text_composition(stats["Letter frequency"])
+            visualisations.character_type_distribution(stats["Character type distribution"])
             input("\nPress Enter to continue...")
             
         elif n == 3:
@@ -105,6 +107,8 @@ def menu():
                 print(f"{i}. {word_len} characters: {count} words")
 
             print("\nGenerating word frequency visualisation...")
+            visualisations.common_word_frequency(stats["Word_length_distribution"])
+            visualisations.word_length_distribution(stats["Word_length_distribution"])
             input("\nPress Enter to continue...")
             
         elif n == 4:
@@ -124,6 +128,9 @@ def menu():
                 print(f"{i}. {sentence_len} words: {count} sentences")
 
             print("\nGenerating sentence analysis visualisation...")
+            visualisations.sentence_length_distribution(stats["Sentence length distribution"])
+            visualisations.sentence_length_frequency(stats["Sentence length distribution"])
+            
             input("\nPress Enter to continue...")
             
         elif n == 5:
@@ -138,10 +145,17 @@ def menu():
                 
             print("\nGenerating character analysis visualisation...")
             visualisations.character_frequency_visual(stats["Letter frequency"])
+            visualisations.character_type_distribution(stats["Character type distribution"])
             input("\nPress Enter to continue...")
             
         elif n == 6:
-            print(f'\n--- Export Results for "{current_file}" ---')
+            print("=" * 50)
+            print("TEXT ANALYSIS RESULTS")
+            print("=" * 50)
+            print(f'File analysed: {current_file}')
+            print(f'Analysis date: {backend.get_analysis_date()}')
+
+            
             path = backend.export_results()
             print(f"Results saved to {path}")
             input("\nPress Enter to continue...")
