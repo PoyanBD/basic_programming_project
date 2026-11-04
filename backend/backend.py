@@ -107,6 +107,7 @@ def process_book(filename):
         "Word_length_distribution": word_analysis.word_length_distribution(dict_words)
     }
 
+    # Store the results in the global variable for later use.
     results = {"filename": filename, "data": data, "dict_words": dict_words}
 
 # Finds the book's path in the database directory.
