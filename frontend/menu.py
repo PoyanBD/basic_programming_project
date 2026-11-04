@@ -81,10 +81,11 @@ def menu():
         elif n == 2:
             print(f'\n--- Basic Statistics for "{current_file}" ---')
             show(backend.get_basic_stats())
+            stats = backend.get_basic_stats()
             
             print("\nGenerating basic statistics visualisation...")
-            visualisations.text_composition(stats["Letter frequency"])
-            visualisations.character_type_distribution(stats["Character type distribution"])
+            visualisations.text_composition(stats["Lines"],stats["Sentences"],stats["Unique Words"],stats["Paragraphs"])
+            visualisations.character_type_distribution(stats["Characters (with spaces)"],stats["Characters (without spaces)"])
             input("\nPress Enter to continue...")
             
         elif n == 3:
@@ -107,7 +108,7 @@ def menu():
                 print(f"{i}. {word_len} characters: {count} words")
 
             print("\nGenerating word frequency visualisation...")
-            visualisations.common_word_frequency(stats["Word_length_distribution"])
+            visualisations.common_word_frequency(stats["Most_common_words"][:10])
             visualisations.word_length_distribution(stats["Word_length_distribution"])
             input("\nPress Enter to continue...")
             
@@ -129,7 +130,7 @@ def menu():
 
             print("\nGenerating sentence analysis visualisation...")
             visualisations.sentence_length_distribution(stats["Sentence length distribution"])
-            visualisations.sentence_length_frequency(stats["Sentence length distribution"])
+            visualisations.sentence_length_frequency(common)
             
             input("\nPress Enter to continue...")
             
@@ -145,7 +146,7 @@ def menu():
                 
             print("\nGenerating character analysis visualisation...")
             visualisations.character_frequency_visual(stats["Letter frequency"])
-            visualisations.character_type_distribution(stats["Character type distribution"])
+            visualisations.character_most_common(common)
             input("\nPress Enter to continue...")
             
         elif n == 6:
