@@ -13,7 +13,7 @@ def character_frequency_visual(letter_freq):
 			max_frequency = item_value
 
 	fig, ax = plt.subplots()
-	ax.bar(characters, character_freq)
+	ax.bar(characters, character_freq, color="tab:orange")
 	ax.set(ylabel='Frequency', title='Character frequency')
 
 	# plt.show()
@@ -28,7 +28,7 @@ def character_most_common(common_characters):
 		character_counts.append(word[1])
 
 	fig, ax = plt.subplots()
-	bar_container = ax.bar(characters, character_counts)
+	bar_container = ax.bar(characters, character_counts, color="tab:cyan")
 	ax.set(ylabel='Frequency', title='Most common characters')
 	ax.bar_label(bar_container, fmt='{:,.0f}')
 
@@ -71,7 +71,7 @@ def common_word_frequency(word_list):
 		word_counts.append(word[1])
 
 	fig, ax = plt.subplots()
-	bar_container = ax.bar(words, word_counts)
+	bar_container = ax.bar(words, word_counts, color="tab:blue")
 	ax.set(ylabel='Frequency', title='Top 10 most common words')
 	ax.bar_label(bar_container, fmt='{:,.0f}')
 
@@ -87,7 +87,7 @@ def word_length_distribution(word_len_list):
 		word_len_counts.append(word_len_list[item])
 
 	fig, ax = plt.subplots()
-	ax.bar(word_len, word_len_counts)
+	ax.bar(word_len, word_len_counts, color="tab:red")
 	ax.set(ylabel='Frequency', title='Word length distribution')
 
 	plt.show()
@@ -108,7 +108,7 @@ def sentence_length_distribution(sentence_dict):
 		sentence_len_counts.append(soreted_dict[item])
 
 	fig, ax = plt.subplots()
-	ax.bar(sentence_len, sentence_len_counts)
+	ax.bar(sentence_len, sentence_len_counts, color="tab:green")
 	ax.set(ylabel='Frequency', title='Sentence length distribution')
 
 	# plt.show()
@@ -123,7 +123,7 @@ def sentence_length_frequency(common_sentence_len):
 		sentences_len_counts.append(word[1])
 
 	fig, ax = plt.subplots()
-	bar_container = ax.bar(sentences_len, sentences_len_counts)
+	bar_container = ax.bar(sentences_len, sentences_len_counts, color="tab:pink")
 	ax.set(ylabel='Frequency', title='Most common sentence lengths')
 	ax.bar_label(bar_container, fmt='{:,.0f}')
 

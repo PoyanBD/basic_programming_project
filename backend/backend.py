@@ -12,11 +12,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LIBRARY_DIR = os.path.join(BASE_DIR, "library")
 DATABASE_DIR = os.path.join(BASE_DIR, "backend", "database")
 
-# JSON only allows string keys, so these dictionaries get string keys when
-# they are saved. They are converted back to int keys when read from the cache.
-INT_KEY_FIELDS = ("sentence_len_distribution", "Word_length_distribution")
-
-
 def list_books():
     return file_loading.check_library()
 
@@ -118,23 +113,12 @@ def cache_path(filename):
     name = os.path.splitext(filename)[0]
     return os.path.join(DATABASE_DIR, f'{name}.json')
 
-
-# JSON turns int keys into strings, so convert them back after reading the cache.
-def restore_int_keys(data):
-    for field in INT_KEY_FIELDS:
-        data[field] = {int(key): value for key, value in data[field].items()}
-    return data
-
-
 # Reads the cached data if it exists and the book has not been changed since. If not, returns None.
 def read_cache(filename):
     book_path = os.path.join(LIBRARY_DIR, filename)
     try:
         with open(cache_path(filename), "r", encoding="utf-8") as f:
             saved = json.load(f)
-        # A cache saved before the digit count existed is treated as outdated.
-        if saved["source_mtime"] == os.path.getmtime(book_path) and "number_of_digits" in saved["data"]:
-            return restore_int_keys(saved["data"])
     except (FileNotFoundError, json.JSONDecodeError, KeyError, ValueError):
         pass
     return None
